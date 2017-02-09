@@ -49,6 +49,17 @@ function bones_head_cleanup() {
 	// remove Wp version from scripts
 	add_filter( 'script_loader_src', 'bones_remove_wp_ver_css_js', 9999 );
 
+
+  /**
+    *  Custom code by denis :
+    */
+  remove_action('wp_head', 'print_emoji_detection_script', 7);
+  remove_action('wp_print_styles', 'print_emoji_styles');
+  // also remove the meta tag with the wp version number
+  // remove_action('wp_head', 'wp_generator'); // bones actually already does it! ;)
+  /** ENd of custom ode by denis */
+
+
 } /* end bones head cleanup */
 
 // A better title
@@ -135,11 +146,12 @@ function bones_scripts_and_styles() {
 
     // comment reply script for threaded comments
     if ( is_singular() AND comments_open() AND (get_option('thread_comments') == 1)) {
-		  wp_enqueue_script( 'comment-reply' );
+		  // wp_enqueue_script( 'comment-reply' );
     }
 
 		//adding scripts file in the footer
-		wp_register_script( 'bones-js', get_stylesheet_directory_uri() . '/library/js/scripts.js', array( 'jquery' ), '', true );
+		// wp_register_script( 'bones-main-js', get_stylesheet_directory_uri() . '/library/js/app.js', array( 'jquery' ), '', true );
+		wp_register_script( 'bones-main-js', get_stylesheet_directory_uri() . '/library/js/app.js', array( 'jquery' ), '', true );
 
 		// enqueue styles and scripts
 		wp_enqueue_script( 'bones-modernizr' );
@@ -148,13 +160,25 @@ function bones_scripts_and_styles() {
 
 		$wp_styles->add_data( 'bones-ie-only', 'conditional', 'lt IE 9' ); // add conditional wrapper around ie stylesheet
 
+    /**
+    * Localize a few basic stuffs for easy js access
+    */
+    wp_localize_script(
+      'bones-main-js',
+      'WP_GLOBALS',
+      array(
+        'siteurl' => get_option('siteurl'),
+        )
+      );
+
+
 		/*
 		I recommend using a plugin to call jQuery
 		using the google cdn. That way it stays cached
 		and your site will load faster.
 		*/
 		wp_enqueue_script( 'jquery' );
-		wp_enqueue_script( 'bones-js' );
+		wp_enqueue_script( 'bones-main-js' );
 
 	}
 }
