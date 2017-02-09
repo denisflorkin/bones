@@ -145,3 +145,13 @@ be set to display none.
 	@import "partials/print";
 
 }
+
+
+
+
+/*********************
+IMPORTING COMPONENTS
+These files are added at the end as they are the most specific files.
+*********************/
+
+@import 'components/image-wrapper';
