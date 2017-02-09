@@ -73,8 +73,14 @@ if ( ! isset( $content_width ) ) {
 /************* THUMBNAIL SIZE OPTIONS *************/
 
 // Thumbnail sizes
-add_image_size( 'bones-thumb-600', 600, 150, true );
+// Thumbnail sizes
 add_image_size( 'bones-thumb-300', 300, 100, true );
+add_image_size( 'bones-thumb-600', 600, 150, true );
+add_image_size( 'bones-thumb-980', 980, 99999, false );
+add_image_size( 'bones-thumb-1250', 1250, 99999, false );
+add_image_size( 'bones-thumb-1650', 1650, 99999, false );
+add_image_size( 'biggest', 2550, 99999, false );
+
 
 /*
 to add more sizes, simply copy a line from above
@@ -115,14 +121,14 @@ new image size.
 
 /************* THEME CUSTOMIZE *********************/
 
-/* 
+/*
   A good tutorial for creating your own Sections, Controls and Settings:
   http://code.tutsplus.com/series/a-guide-to-the-wordpress-theme-customizer--wp-33722
-  
+
   Good articles on modifying the default options:
   http://natko.com/changing-default-wordpress-theme-customization-api-sections/
   http://code.tutsplus.com/tutorials/digging-into-the-theme-customizer-components--wp-27162
-  
+
   To do:
   - Create a js for the postmessage transport method
   - Create some sanitize functions to sanitize inputs
@@ -132,7 +138,7 @@ new image size.
 function bones_theme_customizer($wp_customize) {
   // $wp_customize calls go here.
   //
-  // Uncomment the below lines to remove the default customize sections 
+  // Uncomment the below lines to remove the default customize sections
 
   // $wp_customize->remove_section('title_tagline');
   // $wp_customize->remove_section('colors');
@@ -142,7 +148,7 @@ function bones_theme_customizer($wp_customize) {
 
   // Uncomment the below lines to remove the default controls
   // $wp_customize->remove_control('blogdescription');
-  
+
   // Uncomment the following to change the default section titles
   // $wp_customize->get_section('colors')->title = __( 'Theme Colors' );
   // $wp_customize->get_section('background_image')->title = __( 'Images' );
@@ -243,5 +249,105 @@ function bones_fonts() {
 }
 
 add_action('wp_enqueue_scripts', 'bones_fonts');
+
+
+/**
+  * Hide the 'comment' from the admin menu
+  * comments should be globallly disabled in the settings anyway
+  */
+  function custom_menu_page_removing() {
+      remove_menu_page( 'edit-comments.php' );
+  }
+  add_action( 'admin_menu', 'custom_menu_page_removing' );
+
+
+  /**
+   * Set up ACF options page
+   */
+   /*
+  if( function_exists('acf_add_options_page') ) {
+    acf_add_options_page(array(
+      'page_title' 	=> 'Extras',
+      'menu_title'	=> 'Extras',
+      'menu_slug' 	=> 'extra',
+      'capability'	=> 'edit_posts',
+      'redirect'		=> false
+    ));
+
+    acf_add_options_sub_page(array(
+      'page_title' 	=> 'Informations Générales',
+      'menu_title'	=> 'Informations Générales',
+      'parent_slug'	=> 'extra',
+    ));
+
+    acf_add_options_sub_page(array(
+      'page_title' 	=> 'Page d\'Accueil',
+      'menu_title'	=> 'Page d\'Accueil',
+      'parent_slug'	=> 'extra',
+    ));
+
+    // acf_add_options_page();
+  }
+  */
+
+
+/**
+  * take care of managing how images are brought in through tinyMCE
+  */
+  add_filter( 'post_thumbnail_html', 'remove_width_attribute', 10 );
+  add_filter( 'image_send_to_editor', 'remove_width_attribute', 10 );
+  function remove_width_attribute( $html ) {
+    // remove width and height attr from img tag when added via editor
+    $html = preg_replace( '/(width|height)="\d*"\s/', "", $html );
+    // also auto center by default
+    $html = preg_replace( '/(alignnone)/', "aligncenter", $html );
+    return $html;
+  }
+
+
+/**
+ * Alter the attirbute of image returned by wp_get_media_attachement
+ */
+  function sij_alter_attachement_attributes($attr) {
+    $attr['width'] = '';
+    $attr['height'] = '';
+
+    /* force https for src : */
+    // $attr['src'] = str_replace('http://', 'https://', $attr['src']);
+
+    /** force https for scrset !! should not be change here,
+      *  ssl_srcset take care of it */
+    // $attr['srcset'] = str_replace('http://', 'https://', $attr['srcset']);
+
+    return $attr;
+  }
+  add_filter( 'wp_get_attachment_image_attributes', 'sij_alter_attachement_attributes');
+
+
+/**
+  * Force URLs in srcset attributes into HTTPS scheme.
+  * This is particularly useful when you're running a Flexible SSL frontend like Cloudflare
+  */
+  function ssl_srcset( $sources ) {
+    foreach ( $sources as &$source ) {
+      $source['url'] = set_url_scheme( $source['url'], 'https' );
+    }
+    return $sources;
+  }
+  add_filter( 'wp_calculate_image_srcset', 'ssl_srcset' );
+
+
+/**
+ * Reduce the length of the excerpt
+ */
+  function sij_custom_excerpt_length( $length ) {
+  	return 30;
+  }
+  add_filter( 'excerpt_length', 'sij_custom_excerpt_length', 999 );
+
+
+
+
+
 
 /* DON'T DELETE THIS CLOSING TAG */ ?>
