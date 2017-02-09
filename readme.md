@@ -1,4 +1,12 @@
-# Bones
+# The fork : Bones + npm + custom
+
+The differences with the original work :
+ * npm project has been initialized and js and scss compil are handled through it
+ * a few functions to make image "more responsive" - the idea being for editor not to have to wory about image layout
+ * a couple a feature are extended towards a more https friendly setup
+
+
+# Original : Bones
 A Lightweight Wordpress Development Theme
 
 Bones is designed to make the life of developers easier. It's built
@@ -33,5 +41,3 @@ doing with my life, follow me on twitter: @eddiemachado
 Yeoman generator to quickly install Bones Wordpress starter theme into your Wordpress theme folder
 by 0dp
 https://github.com/0dp/generator-wp-bones
-
-
