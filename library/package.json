@@ -1,0 +1,49 @@
+{
+  "name": "denisflorkin-bones",
+  "version": "0.0.1",
+  "description": "A Lightweight Wordpress Development Theme",
+  "main": "app/main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "browserify": "browserify --debug app/main.js -o js/app.js -t [ babelify --presets [ es2017 ] --plugins [ transform-es2015-modules-commonjs ] ]",
+    "watchify": "watchify app/main.js  -o js/app.js --debug -v -t [ babelify --presets [ es2017 ] --plugins [ transform-es2015-modules-commonjs ] ]",
+    "js:build": "npm run browserify",
+    "js:watch": "npm run watchify",
+    "css:build": "sass scss/style.scss:css/style.css",
+    "css:watch": "sass --watch scss/style.scss:css/style.css",
+    "dev": "npm run js:watch & npm run css:watch",
+    "build": "npm run js:build & npm run css:build"
+  },
+  "dependencies": {
+    "node-fetch": "^1.6.3"
+    },
+  "devDependencies": {
+    "babel-cli": "^6.16.0",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.22.0",
+    "babel-preset-es2017": "^6.22.0",
+    "babelify": "^7.3.0",
+    "browserify": "^13.1.1",
+    "node-fetch": "^1.6.3",
+    "watchify": "^3.7.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/denisflorkin/bones.git"
+  },
+  "keywords": [
+    "wordpress",
+    "html5",
+    "npm",
+    "node",
+    "babel",
+    "sass",
+    "browserify",
+    "bones"
+  ],
+  "author": "denisflorkin - forked from eddiemachado/bones",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/denisflorkin/bones/issues"
+  },
+  "homepage": "https://github.com/denisflorkin/bones#readme"
+}
