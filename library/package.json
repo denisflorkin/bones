@@ -5,8 +5,8 @@
   "main": "app/main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "browserify": "browserify --debug app/main.js -o js/app.js -t [ babelify --presets [ es2017 ] --plugins [ transform-es2015-modules-commonjs ] ]",
-    "watchify": "watchify app/main.js  -o js/app.js --debug -v -t [ babelify --presets [ es2017 ] --plugins [ transform-es2015-modules-commonjs ] ]",
+    "browserify": "browserify --debug app/main.js -o js/app.js -t [ babelify --presets [ es2015 es2017 ] --plugins [ transform-es2015-modules-commonjs ] ]",
+    "watchify": "watchify app/main.js  -o js/app.js --debug -v -t [ babelify --presets [ es2015 es2017 ] --plugins [ transform-es2015-modules-commonjs ] ]",
     "js:build": "npm run browserify",
     "js:watch": "npm run watchify",
     "css:build": "sass scss/style.scss:css/style.css",
@@ -20,6 +20,7 @@
   "devDependencies": {
     "babel-cli": "^6.16.0",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.22.0",
+    "babel-preset-es2015": "^6.24.1",
     "babel-preset-es2017": "^6.22.0",
     "babelify": "^7.3.0",
     "browserify": "^13.1.1",
